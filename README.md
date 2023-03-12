@@ -14,7 +14,7 @@
 
 [![Test Web & Db Servers](https://github.com/RitheeshBaradwaj/python_assignment/actions/workflows/test-web-db-server.yaml/badge.svg?branch=main)](https://github.com/RitheeshBaradwaj/python_assignment/actions/workflows/test-web-db-server.yaml)
 
-[Docker Image: financial-web](https://hub.docker.com/repository/docker/ritheeshbaradwaj/financial-web/general)
+[Docker Image: financial-web](https://hub.docker.com/r/ritheeshbaradwaj/financial-web)
 
 ## Tech Stack
 
@@ -350,7 +350,7 @@ The tests will run and output the results to the console. Any failures or errors
 I have used GitHub Actions to publish the latest docker image to Docker Hub.
 To check the published Docker image, you can run the following command in your terminal after logging into Docker Hub:
 
-Image link: https://hub.docker.com/repository/docker/ritheeshbaradwaj/financial-web/general
+Image link: https://hub.docker.com/r/ritheeshbaradwaj/financial-web
 
 ```bash
 docker pull financial-web
@@ -380,5 +380,6 @@ I appreciate your interest in `Financial Data Retrieval APIs`. You can reach to 
 
 - Email: ritheeshbaradwaj@gmail.com
 - LinkedIn: [ritheesh-baradwaj-yellenki](https://www.linkedin.com/in/ritheesh-baradwaj-yellenki/)
+- [GitHub Issues](https://github.com/RitheeshBaradwaj/python_assignment/issues)
 
 ## Thank you :D
