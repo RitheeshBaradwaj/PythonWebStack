@@ -30,7 +30,7 @@ jobs:
       - name: Push the Docker image to Docker Hub
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          docker tag financial_data_web:latest "${{ secrets.DOCKER_USERNAME }}/financial-web:${IMAGE_TAG}"
+          docker tag python_assignment_web:latest "${{ secrets.DOCKER_USERNAME }}/financial-web:${IMAGE_TAG}"
           docker push "${{ secrets.DOCKER_USERNAME }}/financial-web:${IMAGE_TAG}"
 
       # - name: Upload docker image
@@ -38,9 +38,9 @@ jobs:
       #   with:
       #     name: docker images for financial servers
       #     path: |
-      #       financial_data_web
+      #       python_assignment_web
 
       # - name: Download docker image
       #   uses: actions/download-artifact@v2
       #   with:
-      #     name: financial_data_web
+      #     name: python_assignment_web
