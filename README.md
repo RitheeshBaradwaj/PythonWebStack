@@ -1,5 +1,12 @@
 # Financial Data Retrieval Application
 
+![Python](https://img.shields.io/badge/Python-3.8-blue?style=flat&logo=python)
+![Django](https://img.shields.io/badge/Django-4.1-green?style=flat&logo=django)
+![MySQL](https://img.shields.io/badge/MySQL-8.0.32-blue?style=flat&logo=mysql)
+![Docker](https://img.shields.io/badge/Docker-20.10.9-blue?style=flat&logo=docker)
+![REST API](https://img.shields.io/badge/REST%20API-Django%20REST%20Framework-green)
+
+
 `Financial Data API` project is a simple REST API built using Django Rest Framework that provides financial data to users. The API allows users to retrieve financial data of two stocks (IBM, Apple Inc.) for the most recently two weeks. The data is sourced from the [AlphaVantage](https://www.alphavantage.co/documentation/) API, which requires an API key to access the data. The API provides endpoints for retrieving raw data as well as endpoints for retrieving pre-processed data.
 
 [GitHub Page](https://ritheeshbaradwaj.github.io/python_assignment/)
@@ -20,10 +27,11 @@
 
 The tech stack used in this project is as follows:
 
-- Python 3.8
-- Django 4.1
-- Django Rest Framework 3.4
-- MySQL 8.0.25
+- Python 3.8: A high-level programming language commonly used for web development and data analysis
+- Django 4.1: Django is a high-level Python web framework that enables rapid development of secure and maintainable websites
+- Django Rest Framework 3.4: A web framework for building RESTful APIs with Django, a Python-based web framework
+- MySQL 8.0.32: An open-source relational database management system (RDBMS) that is commonly used for web applications
+- Docker: A containerization platform that allows for the easy creation, deployment, and management of applications in containers.
 
 ## Installation Guide
 
