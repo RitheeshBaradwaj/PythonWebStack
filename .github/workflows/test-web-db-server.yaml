@@ -1,0 +1,39 @@
+name: Test Web & Db Servers
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    # services:
+    #   db:
+    #     image: mysql:latest
+    #     env:
+    #       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD }
+    #       MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+    #       MYSQL_USER: ${{ secrets.MYSQL_USER }}
+    #       MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+    #     ports:
+    #       - 3306:3306
+    #     options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Start containers
+        run: |
+          docker-compose up -d
+          sleep 10
+          docker ps
+
+      # - name: Test database server
+      #   run: docker-compose exec db mysql -h localhost -u ${MYSQL_USER} -p ${MYSQL_PASSWORD} ${MYSQL_DATABASE} -e "SELECT 1" || exit 1
+
+      # - name: Test web server
+      #   run: |
+      #     curl -f http://localhost:5000/ || exit 1

@@ -1,67 +1,161 @@
-# Take-Home Assignment
+# Financial Data Retrieval Application
 
-The goal of this take-home assignment is to evaluate your abilities to use API, data processing and transformation, SQL, and implement a new API service in Python.
+`Financial Data API` project is a simple REST API built using Django Rest Framework that provides financial data to users. The API allows users to retrieve financial data of two stocks (IBM, Apple Inc.) for the most recently two weeks. The data is sourced from the [AlphaVantage](https://www.alphavantage.co/documentation/) API, which requires an API key to access the data. The API provides endpoints for retrieving raw data as well as endpoints for retrieving pre-processed data.
 
-You should first fork this repository, and then send us the code or the url of your forked repository via email.
+## Status
 
-**Please do not submit any pull requests to this repository.**
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
-You need to perform the following **Two** tasks:
+[Docker Image: financial-web](https://hub.docker.com/repository/docker/ritheeshbaradwaj/financial-web/general)
 
-## Task1
-### Problem Statement:
-1. Retrieve the financial data of Two given stocks (IBM, Apple Inc.)for the most recently two weeks. Please using an free API provider named [AlphaVantage](https://www.alphavantage.co/documentation/) 
-2. Process the raw API data response, a sample output after process should be like:
+## Tech Stack
+
+The tech stack used in this project is as follows:
+
+- Python 3.8
+- Django 4.1
+- Django Rest Framework 3.4
+- MySQL 8.0.25
+
+## Installation Guide
+
+### Prerequisites
+
+- [Python 3.8.x](https://www.python.org/downloads/)
+- [pip](https://pip.pypa.io/en/stable/installation/)
+- [Docker](https://docs.docker.com/engine/install/)
+- [MySQL](https://ubuntu.com/server/docs/databases-mysql)
+
+### Install Docker
+
+You can install Docker using the following commands:
+
+```bash
+sudo apt-get update
+sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io -y
 ```
-{
-    "symbol": "IBM",
-    "date": "2023-02-14",
-    "open_price": "153.08",
-    "close_price": "154.52",
-    "volume": "62199013",
-},
-{
-    "symbol": "IBM",
-    "date": "2023-02-13",
-    "open_price": "153.08",
-    "close_price": "154.52",
-    "volume": "59099013"
-},
-{
-    "symbol": "IBM",
-    "date": "2023-02-12",
-    "open_price": "153.08",
-    "close_price": "154.52",
-    "volume": "42399013"
-},
-...
-``` 
-3. Insert the records above into a table named `financial_data` in your local database, column name should be same as the processed data from step 2 above (symbol, date, open_price, close_price, volume) 
 
+### Install Docker Compose
 
-## Task2
-### Problem Statement:
-1. Implement an Get financial_data API to retrieve records from `financial_data` table, please note that:
-    - the endpoint should accept following parameters: start_date, end_date, symbol, all parameters are optional
-    - the endpoint should support pagination with parameter: limit and page, if no parameters are given, default limit for one page is 5
-    - the endpoint should return an result with three properties:
-        - data: an array includes actual results
-        - pagination: handle pagination with four properties
-            
-            - count: count of all records without panigation
-            - page: current page index
-            - limit: limit of records can be retrieved for single page
-            - pages: total number of pages
-        - info: includes any error info if applies
-    
+You can install Docker Compose using pip:
 
-Sample Request:
+```bash
+sudo apt-get update
+sudo apt-get install python3-pip -y
+pip3 install docker-compose
+```
+
+### Start Docker
+
+Start the Docker daemon using the following command:
+
+```bash
+sudo service docker start
+```
+
+## Run Financal Data API With Docker Compose
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/RitheeshBaradwaj/python_assignment.git
+```
+
+2. Install all prerequisites mentioned above (Python3, Docker).
+
+3. Navigate to the cloned repository directory.
+
+```bash
+cd python_assignment
+```
+
+4. Create a virtual environment.
+
+```bash
+python3 -m venv financial_env
+```
+
+5. Activate the virtual environment.
+
+```bash
+source financial_env/bin/activate
+```
+
+6. Install the required packages using pip.
+
+```shell
+pip install -r requirements.txt
+```
+
+7. For local developement, set all the env variables in `.env`
+
+8. Start mysql server and django server with docker-compose
+
+```bash
+docker-compose up -d
+```
+
+Now, both web server and database servers are running, we need to populate the database `financial` with financial data
+taken from AlphaVantage API.
+
+## Maintaining the API Key
+
+- In a development environment, you can store the API key as an environment variable, set `ALPHAVANTAGE_API_KEY` env var in `.env` file.
+
+- In a production environment, you should store the API key as a secure environment variable on your server (eg: GitHub secrity keys). You can claim a [free API](https://www.alphavantage.co/support/#api-key).
+
+For workflows, I stored the secerets here: [GitHub secerets](https://github.com/RitheeshBaradwaj/python_assignment/settings/secrets/actions)
+
+Run `get_raw_data.py` to populate the database with data from IBM, AAPL.
+
+```bash
+python get_raw_data.py
+```
+
+## API Usage
+
+Once our database has some records and we can retrive them.
+
+The project provides the following APIs:
+
+- `/api/financial_data/`: Returns a list of financial data records.
+- `/api/statistics/`: Returns statistics for financial data records.
+
+### /api/financial_data
+
+This API returns a list of financial data based on the given parameters.
+
+#### Request
+
+The following parameters are supported:
+
+- `start_date`: The start date for the financial data (optional).
+- `end_date`: The end date for the financial data (optional).
+- `symbol`: The stock symbol for the financial data (optional).
+- `limit`: The number of items to return per page (optional).
+- `page`: The page number to return (optional).
+
+#### Example request:
+
 ```bash
 curl -X GET 'http://localhost:5000/api/financial_data?start_date=2023-01-01&end_date=2023-01-14&symbol=IBM&limit=3&page=2'
+```
 
-```
-Sample Response:
-```
+#### Response
+
+The response will be a JSON object with the following keys:
+
+- `data`: An array of financial data objects.
+- `pagination`: An object containing pagination information.
+- `info`: An object containing additional information about the request, such as error messages.
+
+#### Example response:
+
+```bash
 {
     "data": [
         {
@@ -94,26 +188,36 @@ Sample Response:
     },
     "info": {'error': ''}
 }
-
 ```
 
-2. Implement an Get statistics API to perform the following calculations on the data in given period of time:
-    - Calculate the average daily open price for the period
-    - Calculate the average daily closing price for the period
-    - Calculate the average daily volume for the period
+### /api/statistics
 
-    - the endpoint should accept following parameters: start_date, end_date, symbols, all parameters are required
-    - the endpoint should return an result with two properties:
-        - data: calculated statistic results
-        - info: includes any error info if applies
+This API returns statistics for the financial data based on the given parameters.
 
-Sample request:
+#### Request
+
+The following parameters are supported:
+
+- `start_date`: The start date for the financial data (required).
+- `end_date`: The end date for the financial data (required).
+- `symbol`: The stock symbol for the financial data (required).
+
+#### Example request
+
 ```bash
-curl -X GET http://localhost:5000/api/statistics?start_date=2023-01-01&end_date=2023-01-31&symbol=IBM
+curl -X GET 'http://localhost:5000/api/statistics?start_date=2023-01-01&end_date=2023-01-31&symbol=IBM'
+```
 
-```
-Sample response:
-```
+#### Response
+
+The response will be a JSON object with the following keys:
+
+- `data`: An object containing statistics information.
+- `info`: An object containing additional information about the request, such as error messages.
+
+#### Example response
+
+```bash
 {
     "data": {
         "start_date": "2023-01-01",
@@ -125,104 +229,148 @@ Sample response:
     },
     "info": {'error': ''}
 }
-
 ```
 
-## What you should deliver:
-Directory structure:
+## Run Database And Web Server on Local Environment
+
+To run the database and webserver locally, you can follow below steps
+
+### Run Django
+
+1. Install dependencies
+
+```bash
+pip install -r requirements.txt
+``
+
+2. Run the migrations
+
+```bash
+python financial/manage.py makemigrations
+python financial/manage.py migrate
 ```
-project-name/
-├── model.py
-├── schema.sql
-├── get_raw_data.py
-├── Dockerfile
-├── docker-compose.yml
-├── README.md
-├── requirements.txt
-└── financial/<Include API service code here>
 
+3. Start the server at requried port
+
+```bash
+python financial/manage.py runserver 0.0.0.0:5000
 ```
 
-1. A `get_raw_data.py` file in root folder
+### Run MySQL
 
-    Action: 
-    
-    Run 
-    ```bash
-    python get_raw_data.py
-    ```
+1. Install mysql server
 
-    Expectation: 
-    
-    1. Financial data will be retrieved from API and processed,then insert all processed records into table `financial_data` in local db
-    2. Duplicated records should be avoided when executing get_raw_data multiple times, consider implementing your own logic to perform upsert operation if the database you select does not have native support for such operation.
+```bash
+sudo apt-get update
+sudo apt-get install mysql-server
+sudo systemctl start mysql
+sudo systemctl status mysql
+```
 
-2. A `schema.sql` file in root folder
-    
-    Define schema for financial_data table, if you prefer to use an ORM library, just **ignore** this deliver item and jump to item3 below.
+2. To secure the installation, run the following command:
 
-    Action: Run schema definition in local db
+```bash
+sudo mysql_secure_installation
+```
+This will guide you through a series of prompts to secure your installation.
 
-    Expectation: A new table named `financial_data` should be created if not exists in db
+You can then log in to the MySQL server using the following command:
 
-3. (Optional) A `model.py` file: 
-    
-    If you perfer to use a ORM library instead of DDL, please include your model definition in `model.py`, and describe how to perform migration in README.md file
+```bash
+sudo mysql -u root -p
+```
 
-4. A `Dockerfile` file in root folder
+Enter the root password you set during installation.
 
-    Build up your local API service
+To create a new database, use the following command:
 
-5. A `docker-compose.yml` file in root folder
+```bash
+CREATE DATABASE dbname;
+```
 
-    Two services should be defined in docker-compose.yml: Database and your API
+Replace "dbname" with the name you want to give your database. For our application we use `financial`.
 
-    Action:
+To create a new user and grant permissions to the database, use the following commands:
 
-    ```bash
-    docker-compose up
-    ```
+```bash
+CREATE USER 'username'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON dbname.* TO 'username'@'localhost';
+```
 
-    Expectation:
-    Both database and your API service is up and running in local development environment
+Replace "username" with the name you want to give your user and "password" with the password you want to use.
 
-6. A `financial` sub-folder:
+## Running Tests
 
-    Put all API implementation related codes in here
+To run tests for this project, follow these steps:
 
-7. `README.md`: 
+1. Ensure that all the necessary dependencies are installed by running the command pip install -r requirements.txt
 
-    You should include:
-    - A brief project description
-    - Tech stack you are using in this project
-    - How to run your code in local environment
-    - Provide a description of how to maintain the API key to retrieve financial data from AlphaVantage in both local development and production environment.
+### Getting Raw Data
 
-8. A `requirements.txt` file:
+1. Execute the following command to run unit tests for `get_raw_data.py`
 
-    It should contain your dependency libraries.
+```bash
+python -m unittest tests/test_get_raw_data.py
+``
 
-## Requirements:
+2. To test `get_raw_data.py with sql server. Start the test database and execute following command
 
-- The program should be written in Python 3.
-- You are free to use any API and libraries you like, but should include a brief explanation of why you chose the API and libraries you used in README.
-- The API key to retrieve financial data should be stored securely. Please provide a description of how to maintain the API key from both local development and production environment in README.
-- The database in Problem Statement 1 could be created using SQLite/MySQL/.. with your own choice.
-- The program should include error handling to handle cases where the API returns an error or the data is not in the correct format.
-- The program should cover as many edge cases as possible, not limited to expectations from deliverable above.
-- The program should use appropriate data structures and algorithms to store the data and perform the calculations.
-- The program should include appropriate documentation, including docstrings and inline comments to explain the code.
+```bash
+python -m unittest tests/test_get_raw_data.py
+```
 
-## Evaluation Criteria:
+### Django Tests For APIs
 
-Your solution will be evaluated based on the following criteria:
+1. Run the following command to run migrations for test database
 
-- Correctness: Does the program produce the correct results?
-- Code quality: Is the code well-structured, easy to read, and maintainable?
-- Design: Does the program make good use of functions, data structures, algorithms, databases, and libraries?
-- Error handling: Does the program handle errors and unexpected input appropriately?
-- Documentation: Is the code adequately documented, with clear explanations of the algorithms and data structures used?
+```bash
+export TEST_DATABASE=ON
+python financial/manage.py makemigrations
+python financial/manage.py migrate
+```
 
-## Additional Notes:
+2. Run the tests for `core` app
 
-You have 7 days to complete this assignment and submit your solution.
+```bash
+python financial/manage.py test core.tests
+```
+
+The tests will run and output the results to the console. Any failures or errors will also be displayed along with the traceback for easy debugging.
+
+## How to Check the Published Docker Image
+
+I have used GitHub Actions to publish the latest docker image to Docker Hub.
+To check the published Docker image, you can run the following command in your terminal after logging into Docker Hub:
+
+Image link: https://hub.docker.com/repository/docker/ritheeshbaradwaj/financial-web/general
+
+```bash
+docker pull financial-web
+```
+
+To verify that the image has been pulled successfully, you can run the following command:
+
+```bash
+docker images
+```
+
+This will display a list of all the images you have downloaded to your machine. Check if the image you just downloaded is listed there.
+
+## How to Check the GitHub Workflows
+
+To check the GitHub Workflows, follow these steps:
+
+1. Click on the "Actions" tab
+2. Here you can see a list of workflows that have been set up in this repository
+
+- `Test Financial Data APIs`: To test `get_raw_data.py` and django `financial/core` apis
+- `Build and Publish Docker Image`: To build and publish latest docker image to Docker Hub
+
+## Contact Information
+
+I appreciate your interest in `Financial Data Retrieval APIs`. You can reach to me through the following channels:
+
+- Email: ritheeshbaradwaj@gmail.com
+- LinkedIn: [ritheesh-baradwaj-yellenki](https://www.linkedin.com/in/ritheesh-baradwaj-yellenki/)
+
+## Thank you
