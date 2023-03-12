@@ -2,9 +2,17 @@
 
 `Financial Data API` project is a simple REST API built using Django Rest Framework that provides financial data to users. The API allows users to retrieve financial data of two stocks (IBM, Apple Inc.) for the most recently two weeks. The data is sourced from the [AlphaVantage](https://www.alphavantage.co/documentation/) API, which requires an API key to access the data. The API provides endpoints for retrieving raw data as well as endpoints for retrieving pre-processed data.
 
+[GitHub Page](https://ritheeshbaradwaj.github.io/python_assignment/)
+
 ## Status
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+
+[![Build and Publish Docker Image](https://github.com/RitheeshBaradwaj/python_assignment/actions/workflows/publish-docker-image.yaml/badge.svg?branch=main)](https://github.com/RitheeshBaradwaj/python_assignment/actions/workflows/publish-docker-image.yaml)
+
+[![Test Financial Data APIs](https://github.com/RitheeshBaradwaj/python_assignment/actions/workflows/test-financial-data.yaml/badge.svg?branch=main)](https://github.com/RitheeshBaradwaj/python_assignment/actions/workflows/test-financial-data.yaml)
+
+[![Test Web & Db Servers](https://github.com/RitheeshBaradwaj/python_assignment/actions/workflows/test-web-db-server.yaml/badge.svg?branch=main)](https://github.com/RitheeshBaradwaj/python_assignment/actions/workflows/test-web-db-server.yaml)
 
 [Docker Image: financial-web](https://hub.docker.com/repository/docker/ritheeshbaradwaj/financial-web/general)
 
