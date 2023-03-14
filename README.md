@@ -361,7 +361,7 @@ To check the published Docker image, you can run the following command in your t
 Image link: https://hub.docker.com/r/ritheeshbaradwaj/financial-web
 
 ```bash
-docker pull financial-web
+docker pull ritheeshbaradwaj/financial-web
 ```
 
 To verify that the image has been pulled successfully, you can run the following command:
